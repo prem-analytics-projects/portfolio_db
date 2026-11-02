@@ -1,1 +1,37 @@
+CREATE TABLE portfolio.profile (
+    profile_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    professional_title VARCHAR(150),
+    email VARCHAR(150) UNIQUE,
+    phone VARCHAR(20),
+    location VARCHAR(100),
+    profile_image_url TEXT,
+    resume_url TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
 
+CREATE TABLE portfolio.about_content (
+    content_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    profile_id BIGINT NOT NULL,
+    section_title VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+    display_order INTEGER DEFAULT 1,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+
+    CONSTRAINT fk_about_profile
+        FOREIGN KEY (profile_id)
+        REFERENCES portfolio.profile(profile_id)
+);
+
+CREATE TABLE portfolio.social_links (
+    social_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    profile_id BIGINT NOT NULL,
+    platform VARCHAR(50) NOT NULL,
+    profile_url TEXT NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+
+    CONSTRAINT fk_social_profile
+        FOREIGN KEY (profile_id)
+        REFERENCES portfolio.profile(profile_id)
+);
