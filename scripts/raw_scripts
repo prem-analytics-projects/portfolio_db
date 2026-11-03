@@ -35,3 +35,75 @@ CREATE TABLE portfolio.social_links (
         FOREIGN KEY (profile_id)
         REFERENCES portfolio.profile(profile_id)
 );
+
+
+
+select * from raw_data.profile
+select * from portfolio.raw_data.about_content
+ALTER USER postgres WITH PASSWORD 'Prem2026';
+
+INSERT INTO raw_data.profile
+(
+    full_name,
+    professional_title,
+    email,
+    phone,
+    location,
+    profile_image_url,
+    resume_url
+)
+VALUES
+(
+    'Prem Singh Kuntia',
+    'Data Analytics Professional',
+    'prem.kuntia@example.com',
+    '+91-9000000000',
+    'India',
+    'https://example.com/profile.jpg',
+    'https://example.com/resume.pdf'
+);
+
+INSERT INTO portfolio.raw_data.about_content
+(
+    profile_id,
+    section_title,
+    description,
+    display_order,
+    is_active
+)
+VALUES
+(
+    1,
+    'Professional Summary',
+    'Data Analytics professional with 4+ years of experience in developing analytics solutions, automating business processes, and delivering actionable insights.',
+    1,
+    TRUE
+),
+(
+    1,
+    'Technical Expertise',
+    'Experienced in SQL, Python, Power BI, Tableau, PostgreSQL, Snowflake, AWS S3 and Amazon Redshift.',
+    2,
+    TRUE
+),
+(
+    1,
+    'Data Engineering',
+    'Hands-on experience in data ingestion, ETL processes, data transformation, warehouse concepts and reporting automation.',
+    3,
+    TRUE
+),
+(
+    1,
+    'Automation',
+    'Developed Python automation scripts for recurring reports and data processing, with Jenkins scheduling.',
+    4,
+    TRUE
+),
+(
+    1,
+    'Career Objective',
+    'Looking to contribute to data-driven organizations by building scalable analytics and data engineering solutions.',
+    5,
+    TRUE
+);
