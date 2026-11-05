@@ -1,0 +1,117 @@
+CREATE SCHEMA IF NOT EXISTS auth;
+CREATE TABLE auth.users (
+    user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+
+    email VARCHAR(254) NOT NULL,
+    mobile VARCHAR(20),
+
+    password_hash TEXT NOT NULL,
+
+    email_verified_at TIMESTAMPTZ DEFAULT NULL,
+
+    approval_status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+
+    approved_by BIGINT,
+    approved_at TIMESTAMPTZ,
+
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+    CONSTRAINT chk_approval_status
+        CHECK (approval_status IN ('PENDING', 'APPROVED', 'REJECTED')),
+
+    CONSTRAINT fk_approved_by
+        FOREIGN KEY (approved_by)
+        REFERENCES auth.users(user_id)
+);
+
+CREATE UNIQUE INDEX uq_users_email
+ON auth.users (LOWER(email));
+
+
+CREATE TABLE auth.roles (
+    role_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    role_name VARCHAR(50) NOT NULL UNIQUE,
+
+    description TEXT,
+
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO auth.roles (role_name, description)
+VALUES
+('ADMIN', 'Administrator with full access'),
+('USER', 'Registered user with approved access');
+
+CREATE TABLE auth.user_roles (
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+
+    assigned_at TIMESTAMPTZ DEFAULT NOW(),
+
+    PRIMARY KEY (user_id, role_id),
+
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES auth.users(user_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_role
+        FOREIGN KEY (role_id)
+        REFERENCES auth.roles(role_id)
+);
+
+
+CREATE TABLE auth.email_verification_tokens (
+    token_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    user_id BIGINT NOT NULL,
+
+    token_hash TEXT NOT NULL UNIQUE,
+
+    expires_at TIMESTAMPTZ NOT NULL,
+
+    used_at TIMESTAMPTZ DEFAULT NULL,
+
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+
+    CONSTRAINT fk_verification_user
+        FOREIGN KEY (user_id)
+        REFERENCES auth.users(user_id)
+        ON DELETE CASCADE
+);
+
+
+INSERT INTO auth.users (
+    first_name,
+    last_name,
+    email,
+    mobile,
+    password_hash,
+    email_verified_at,
+    approval_status,
+    approved_at
+)
+VALUES (
+    'Prem',
+    'Kuntia',
+    'your-email@example.com',
+    '9000000000',
+    'REPLACE_WITH_BCRYPT_HASH',
+    NOW(),
+    'APPROVED',
+    NOW()
+);
+
+INSERT INTO auth.user_roles (user_id, role_id)
+SELECT
+    u.user_id,
+    r.role_id
+FROM auth.users u
+CROSS JOIN auth.roles r
+WHERE u.email = 'your-email@example.com'
+AND r.role_name = 'ADMIN';
