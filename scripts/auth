@@ -1,3 +1,6 @@
+YJxAnhtDEYoJF0nZA67rm7VR9jryuLqxG8aCrkitWU4=
+wiwj dfxm mwsl mvfw
+
 CREATE SCHEMA IF NOT EXISTS auth;
 CREATE TABLE auth.users (
     user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
