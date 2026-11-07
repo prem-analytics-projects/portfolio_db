@@ -1,6 +1,8 @@
 YJxAnhtDEYoJF0nZA67rm7VR9jryuLqxG8aCrkitWU4=
 wiwj dfxm mwsl mvfw
-
+xjxk egyn nxtm nwgx
+set JAVA_HOME=C:\Program Files\Java\jdk-21.0.11
+set PATH=%JAVA_HOME%\bin;%PATH%
 CREATE SCHEMA IF NOT EXISTS auth;
 CREATE TABLE auth.users (
     user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
